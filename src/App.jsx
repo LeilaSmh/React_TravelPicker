@@ -6,12 +6,16 @@ import DeleteConfirmation from "./components/DeleteConfirmation.jsx";
 import logoImg from "./assets/logo.png";
 import { sortPlacesByDistance } from "./loc.js";
 
+const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+const storedPlaces = AVAILABLE_PLACES.filter((place) =>
+  storedIds.includes(place.id)
+);
+
 function App() {
   const modal = useRef();
   const selectedPlace = useRef();
-  const [pickedPlaces, setPickedPlaces] = useState([]);
+  const [pickedPlaces, setPickedPlaces] = useState(storedPlaces);
   const [availablePlaces, setAvailablePlaces] = useState([]);
-  const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
 
   function handleStartRemovePlace(id) {
     modal.current.open();
@@ -31,6 +35,7 @@ function App() {
       return [place, ...prevPickedPlaces];
     });
 
+    const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
     if (storedIds.indexOf(id) === -1)
       localStorage.setItem(
         "selectedPlaces",
@@ -43,11 +48,11 @@ function App() {
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
 
-    if (storedIds.indexOf(selectedPlace.current) !== -1)
-      localStorage.setItem(
-        "selectedPlaces",
-        JSON.stringify(storedIds.filter((x) => x !== selectedPlace.current))
-      );
+    const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+    localStorage.setItem(
+      "selectedPlaces",
+      JSON.stringify(storedIds.filter((id) => id !== selectedPlace.current))
+    );
 
     modal.current.close();
   }
@@ -61,7 +66,6 @@ function App() {
       );
 
       setAvailablePlaces(sortedPlaces);
-      setPickedPlaces(sortedPlaces.filter((x) => storedIds.includes(x.id)));
     });
   }, []);
 
