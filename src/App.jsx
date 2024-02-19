@@ -42,6 +42,13 @@ function App() {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
+
+    if (storedIds.indexOf(selectedPlace.current) !== -1)
+      localStorage.setItem(
+        "selectedPlaces",
+        JSON.stringify(storedIds.filter((x) => x !== selectedPlace.current))
+      );
+
     modal.current.close();
   }
 
