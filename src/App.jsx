@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Places from "./components/Places.jsx";
 import { AVAILABLE_PLACES } from "./data.js";
 import Modal from "./components/Modal.jsx";
@@ -43,7 +43,7 @@ function App() {
       );
   }
 
-  function handleRemovePlace() {
+  const handleRemovePlace = useCallback(() => {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
@@ -55,7 +55,7 @@ function App() {
     );
 
     setModalIsOpen(false);
-  }
+  }, []);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
