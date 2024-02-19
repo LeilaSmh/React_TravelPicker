@@ -11,6 +11,7 @@ function App() {
   const selectedPlace = useRef();
   const [pickedPlaces, setPickedPlaces] = useState([]);
   const [availablePlaces, setAvailablePlaces] = useState([]);
+  const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
 
   function handleStartRemovePlace(id) {
     modal.current.open();
@@ -30,7 +31,6 @@ function App() {
       return [place, ...prevPickedPlaces];
     });
 
-    const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
     if (storedIds.indexOf(id) === -1)
       localStorage.setItem(
         "selectedPlaces",
@@ -54,6 +54,7 @@ function App() {
       );
 
       setAvailablePlaces(sortedPlaces);
+      setPickedPlaces(sortedPlaces.filter((x) => storedIds.includes(x.id)));
     });
   }, []);
 
